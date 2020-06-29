@@ -279,6 +279,20 @@ impl Rng {
         self.u8(..) % 2 == 0
     }
 
+    /// Generates a random `bool` with the given
+    /// probability of being `true`.
+    ///
+    /// Panics if `p` is not in the range `0..=1`.
+    #[inline]
+    pub fn chance(&self, p: f32) -> bool {
+        assert!(
+            p <= 1.0 && p >= 0.0,
+            "probability cannot be outside of range [0, 1]"
+        );
+
+        self.f32() <= p
+    }
+
     /// Generates a random digit in the given `base`.
     ///
     /// Digits are represented by `char`s in ranges 0-9 and a-z.
@@ -479,6 +493,15 @@ pub fn seed(seed: u64) {
 #[inline]
 pub fn bool() -> bool {
     RNG.with(|rng| rng.bool())
+}
+
+/// Generates a random `bool` with the given
+/// probability of being `true`.
+///
+/// Panics if `p` is not in the range `0..=1`.
+#[inline]
+pub fn chance(p: f32) -> bool {
+    RNG.with(|rng| rng.chance(p))
 }
 
 /// Generates a random `char` in ranges a-z and A-Z.
